@@ -68,8 +68,14 @@ class Sapling {
 		return this.registry.unset(arg);
 	}
 
-	findRoute(action) {
-		return this.router.findRoute(action);
+	/**
+	 * Finds the next route
+	 * 
+	 * @param {String} action 
+	 * @param {Object} req 
+	 */
+	findRoute(action, req) {
+		return this.router.findRoute(action, req);
 	}
 
 }

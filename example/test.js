@@ -24,6 +24,12 @@ Sapling.use('action2', (req,res) => {
 	return true;
 })
 
+Sapling.use('disconnect', (req,res) => {
+	res = { message: 'You\'re not welcome here!' };
+	req.client.close();
+	return true;
+})
+
 Sapling.use((req,res) => {
 	res.test6 = 'fallback';
 	return true;

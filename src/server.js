@@ -57,8 +57,12 @@ class Server {
 	 * @param {Client} client 
 	 */
 	_onClientMessage(str, client) {
-		const response = this.parseMessage(str, client);
-		client.send(JSON.stringify(response));
+		const response = JSON.stringify(this.parseMessage(str, client));
+		if (client.connected)
+			client.send(response);
+		else {
+			console.log(`Cannot send ${response} to client, lost connection`);
+		}
 	}
 
 	/**
@@ -67,7 +71,7 @@ class Server {
 	 * @param {String} str message
 	 * @returns {Object} object response results
 	 */
-	parseMessage(str) {
+	parseMessage(str, client) {
 		var resp = { error: true, message: 'Invalid request made' };
 
 		try {
@@ -78,7 +82,7 @@ class Server {
 			}
 
 			// find route bruh!
-			resp = this.sapling.findRoute(json.action, json).res;
+			resp = this.sapling.findRoute(json.action, {raw: json, client}).res;
 		} catch (e) {
 			console.log('[!] Error! ', e);
 			resp.message = 'Internal server error, ' + e;
