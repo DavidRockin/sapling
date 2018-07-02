@@ -1,4 +1,5 @@
 const Registry = require('./registry');
+const Router   = require('./router');
 
 /**
  * Sapling framework application
@@ -8,6 +9,7 @@ class Sapling {
 	constructor(opts) {
 		this.opts = opts;
 		this.registry = new Registry();
+		this.router   = new Router(this);
 	}
 
 	/**
@@ -29,7 +31,8 @@ class Sapling {
 		return this.opts;
 	}
 
-	use(handler) {
+	use(action, handler) {
+		return this.router.use(action, handler);
 	}
 
 	/**
@@ -61,6 +64,10 @@ class Sapling {
 	 */
 	unset(arg) {
 		return this.registry.unset(arg);
+	}
+
+	findRoute(action) {
+		return this.router.findRoute(action);
 	}
 
 }
