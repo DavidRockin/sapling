@@ -1,5 +1,6 @@
 const Registry = require('./registry');
 const Router   = require('./router');
+const Server   = require('./server');
 
 /**
  * Sapling framework application
@@ -10,6 +11,7 @@ class Sapling {
 		this.opts = opts;
 		this.registry = new Registry();
 		this.router   = new Router(this);
+		this.server   = new Server(this);
 	}
 
 	/**

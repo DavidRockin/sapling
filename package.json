@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/DavidRockin/sapling/issues"
   },
-  "homepage": "https://github.com/DavidRockin/sapling#readme"
+  "homepage": "https://github.com/DavidRockin/sapling#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "ws": "^5.2.1"
+  }
 }
