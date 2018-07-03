@@ -59,8 +59,8 @@ class Server {
 			this._onClientMessage.bind(this)(str, client);
 		}).bind(this));
 		
-		client.on('close', (client => { this._onClientClose(client); }).bind(this));
-		client.on('error', (client => { this._onClientError(client); }).bind(this));
+		client.on('close', (code => { this._onClientClose(client, code); }).bind(this));
+		client.on('error', (err  => { this._onClientError(client, err); }).bind(this));
 	}
 
 	/**
@@ -68,8 +68,8 @@ class Server {
 	 * 
 	 * @param {Client} client 
 	 */
-	_onClientClose(client) {
-		this.sapling.getEvents().emit('clientClose', client);
+	_onClientClose(client, code) {
+		this.sapling.getEvents().emit('clientClose', client, code);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class Server {
 	_onClientMessage(str, client) {
 		this.sapling.getEvents().emit('clientMessage', client, str);
 		const response = JSON.stringify(this.parseMessage(str, client));
-		if (client.connected)
+		if (client.readyState === ws.OPEN)
 			client.send(response);
 		else {
 			console.log(`Cannot send ${response} to client, lost connection`);
