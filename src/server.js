@@ -13,6 +13,15 @@ class Server {
 	}
 
 	/**
+	 * Gets sapling instance
+	 * 
+	 * @returns {Sapling}
+	 */
+	getSapling() {
+		return this.sapling;
+	}
+
+	/**
 	 * Setup our servers
 	 * 
 	 * An existing express, HTTP server and/or Websocket server
@@ -45,9 +54,31 @@ class Server {
 	 * @param {Client} client 
 	 */
 	_onClientConnect(client) {
+		this.sapling.getEvents().emit('clientConnect', client);
 		client.on('message', (str => {
-			this._onClientMessage.bind(this)(str,client);
+			this._onClientMessage.bind(this)(str, client);
 		}).bind(this));
+		
+		client.on('close', (client => { this._onClientClose(client); }).bind(this));
+		client.on('error', (client => { this._onClientError(client); }).bind(this));
+	}
+
+	/**
+	 * When a client disconnects from the websocket
+	 * 
+	 * @param {Client} client 
+	 */
+	_onClientClose(client) {
+		this.sapling.getEvents().emit('clientClose', client);
+	}
+
+	/**
+	 * When a client disconnects from the websocket
+	 * 
+	 * @param {Client} client 
+	 */
+	_onClientError(client, err) {
+		this.sapling.getEvents().emit('clientError', client, err);
 	}
 
 	/**
@@ -57,6 +88,7 @@ class Server {
 	 * @param {Client} client 
 	 */
 	_onClientMessage(str, client) {
+		this.sapling.getEvents().emit('clientMessage', client, str);
 		const response = JSON.stringify(this.parseMessage(str, client));
 		if (client.connected)
 			client.send(response);

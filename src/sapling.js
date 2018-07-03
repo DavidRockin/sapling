@@ -1,6 +1,7 @@
 const Registry = require('./registry');
 const Router   = require('./router');
 const Server   = require('./server');
+const EventEmitter = require('events');
 
 /**
  * Sapling framework application
@@ -12,6 +13,7 @@ class Sapling {
 		this.registry = new Registry();
 		this.router   = new Router(this);
 		this.server   = new Server(this);
+		this.events   = new EventEmitter();
 	}
 
 	/**
@@ -31,6 +33,19 @@ class Sapling {
 	 */
 	getOpts() {
 		return this.opts;
+	}
+
+	/**
+	 * Gets the event emitter system
+	 * 
+	 * @returns {EventEmitter}
+	 */
+	getEvents() {
+		return this.events;
+	}
+
+	on(eventName, handler) {
+		return this.getEvents().on(eventName, handler);
 	}
 
 	use(action, handler) {
