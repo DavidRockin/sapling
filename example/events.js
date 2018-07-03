@@ -34,6 +34,12 @@ Sapling.on('clientConnect', client => {
 
 	// we could assign custom client identifiers
 	client.uuid = 'example-' + new Date().getTime();
+
+	client.sendJSON({
+		action: 'testing',
+		data: [ 1, 2, 3],
+		isGood: false
+	})
 });
 
 // listen for when a client disconnects

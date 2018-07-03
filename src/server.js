@@ -54,6 +54,10 @@ class Server {
 	 * @param {Client} client 
 	 */
 	_onClientConnect(client) {
+		client.sendJSON = (data) => {
+			client.send(JSON.stringify(data));
+		};
+
 		this.sapling.getEvents().emit('clientConnect', client);
 		client.on('message', (str => {
 			this._onClientMessage.bind(this)(str, client);
